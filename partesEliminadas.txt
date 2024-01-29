@@ -1,0 +1,21 @@
+1. A la hora de dibujar el coche, antes de calcular su posición con la función dibujarPolígono() (explicado en punto 6)
+    lo hacíamos así:
+
+     ctx.save();
+        ctx.translate(this.x,this.y);
+        ctx.rotate(-this.angle);
+        ctx.beginPath();
+        //partimos del centro del coche
+        ctx.rect(
+            -this.width/2,
+            -this.height/2,
+            this.width,
+            this.height
+        );
+        ctx.fill();
+
+        ctx.restore();
+
+    Se hacía una translación, rotación y dibujábamos un rectángulo (.rect).
+    Este método nos impedía aplicar colisión, porque no conocíamos 
+    las coordenadas del coche.

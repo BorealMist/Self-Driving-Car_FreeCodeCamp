@@ -1,0 +1,58 @@
+1. Definición del contexto (variable ctx) en JS: https://medium.com/swlh/understanding-context-in-js-eceb5ef1fa75
+2. Explicación de la interpolación lineal, 
+    utilizada para dibujar los carriles de la carretera en carretera.js:  https://www.youtube.com/watch?v=WjeXn8fsNiA&t=24s
+    Al calcular el punto medio entre izquierda y der siempre deja el mismo espacio entre ambas
+
+3. Función que actualiza y calcula los rayos incluyéndolos en el array rays[] Utilizamos la interp. lineal para calcular
+    A = this.raySpread/2
+    B= -this.raySpread/2
+    c= i/this.rayCount-1
+    Se divide entre dos porque en radianes:
+                    0
+                    |
+                    |
+                    |
+     PI/2 ----------+---------- -PI/2
+                    |
+                    |
+                    |
+                    PI
+
+4.El método getInterseccion() no solo devuelve si hay o no un punto de contacto,
+    si no a qué distancia (offset) se encuentra el origen del sensor del punto de contacto.
+    En resumen, getInterseccion() te da tres valores: la X, la Y y el Offset, la distancia
+    entre el punto de contacto y el origen del sensor.
+    El mapa < const offsets=toques.map(e=>e.offset); > itera a través de todos los
+    elementos del array toques y devuelve el valor offset de ese elemento. Además,
+    guarda esos valores en la constante "offsets".
+    la constante minOffset busca el valor offset más pequeño, porque ese será el borde
+    (ya sea otro coche o el arcén de la carretera) al que se tiene que responder.
+    PROBLEMA: detecta x e y como undefined, no puede llamar a la posición. Si al llamarlo se declara como un
+    array bidimensional, la aplicación funciona salvo por la detección de choque. Ni idea de por qué
+
+5. La explicación a la fórmula de intersección de segmentos:
+https://www.youtube.com/watch?v=fHOLQJo0FjQ    
+
+6. Queremos que el coche reaccione de alguna forma cuando toque los arcenes de la carretera 
+    u otro coche. Recurrimos al método de la segmentación de intersecciones (punto 4). 
+    El problema es que como lo que se mueve realmente es la carretera, no conocemos
+    las coordenadas del coche. Para ello es necesario crear un método privado con el que                
+    podamos asignar valores a esas coordenadas.
+    Tenemos dos medidas para ello: altura y anchura del bloque que representa el coche.
+    El radio del centro a una esquina y el ángulo desde ese radio al radio que esté entre
+    el centro y el medio entre las dos esquinas superiores es lo que debemos saber.
+      /*
+        El radio es la hipotenusa de lo ancho y lo largo entre 2 
+        (es hasta el centro)
+        Función arcotangente atan2 para calcular el ángulo.
+        el ángulo A es como el cateto Y de un
+        triángulo pero con un arco en vez de una recta, sabusté*/
+        
+7. La función poligonoIntersecta recibe 2 parámetros, el polígono 1 y el polígono 2 (poli1 y poli2).
+    Para comprobar si hay contacto entre el poligono 1 y el poligono 2 se recorren todos los puntos de
+    cada polígono ([i] y [j] para polígno 1 y 2, respectivamente) y se añaden a la constante tocar. 
+    Reutilizamos la función getIntersección, que tiene un valor X, Y y la distancia entre ellos, 
+    y pasamos por todos los puntos del polígono (desde el punto [i] del polígono 1 hasta [i+1] durante toda
+    la distancia .length del polígono, y lo mismo con [j]). Estamos haciendo segmentos.
+    Se utiliza el operador resto (%) porque necesitamos que el resto entre el último punto y el primero
+    sea 0, si no el polígno no estaría cerrado. 
